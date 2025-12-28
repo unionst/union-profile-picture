@@ -1,3 +1,10 @@
+//
+//  CropImagePicker.swift
+//  UnionProfilePhoto
+//
+//  Created on 12/28/24.
+//
+
 import SwiftUI
 
 public struct CropImagePicker: View {
@@ -7,15 +14,8 @@ public struct CropImagePicker: View {
     let aspectRatioLocked: Bool
     @Environment(\.dismiss) var dismiss
     
-    var presentCrop: Binding<Bool> {
-        Binding {
-            image != nil
-        } set: { newValue in
-            if !newValue {
-                image = nil
-            }
-        }
-    }
+    @State private var selectedImage: UIImage?
+    @State private var showCropView = false
     
     public init(
         image: Binding<UIImage?>,
@@ -31,21 +31,29 @@ public struct CropImagePicker: View {
     
     public var body: some View {
         NavigationStack {
-            ImagePickerView(image: $image) {
+            ImagePickerView(image: $selectedImage) {
                 dismiss()
             }
-            .navigationDestination(isPresented: presentCrop) {
+            .navigationDestination(isPresented: $showCropView) {
                 CropImageView(
-                    image: $image,
+                    image: $selectedImage,
                     cropShape: cropShape,
                     aspectRatio: aspectRatio,
                     aspectRatioLocked: aspectRatioLocked
                 ) {
+                    if let selectedImage {
+                        image = selectedImage
+                    }
                     dismiss()
                 }
                 .ignoresSafeArea()
             }
             .ignoresSafeArea()
+            .onChange(of: selectedImage) { oldValue, newValue in
+                if newValue != nil {
+                    showCropView = true
+                }
+            }
         }
         .ignoresSafeArea()
     }

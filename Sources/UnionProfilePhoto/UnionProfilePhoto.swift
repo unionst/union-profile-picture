@@ -1,18 +1,28 @@
+//
+//  UnionProfilePhoto.swift
+//  UnionProfilePhoto
+//
+//  Created on 12/28/24.
+//
+
 import SwiftUI
 
 public extension View {
-    /// Presents a profile photo picker with automatic cropping.
+    /// Presents an image picker with automatic cropping.
     ///
-    /// This modifier presents a sheet containing a photo picker that automatically flows into a circular crop editor.
-    /// The user can select an image from their photo library, then crop it to a circular profile photo with drag, pinch, and zoom gestures.
+    /// This modifier presents a sheet containing a photo picker that automatically flows into a crop editor.
+    /// The user can select an image from their photo library, then crop it with drag, pinch, and zoom gestures.
     ///
     /// - Parameters:
     ///   - isPresented: A binding to whether the photo picker is presented.
     ///   - image: A binding to the selected and cropped image. Set to `nil` if the user cancels.
+    ///   - cropShape: The shape of the crop area. Default is `.circle`.
+    ///   - aspectRatio: The aspect ratio of the crop area. Default is `1:1` (square).
+    ///   - aspectRatioLocked: Whether the aspect ratio is locked. Default is `true`.
     ///
-    /// - Returns: A view that presents the profile photo picker.
+    /// - Returns: A view that presents the crop image picker.
     ///
-    /// Basic Example:
+    /// Basic Example (Circular):
     /// ```swift
     /// @State private var profileImage: UIImage?
     /// @State private var showPicker = false
@@ -20,7 +30,26 @@ public extension View {
     /// Button("Select Photo") {
     ///     showPicker = true
     /// }
-    /// .profilePhotoPicker(isPresented: $showPicker, image: $profileImage)
+    /// .cropImagePicker(isPresented: $showPicker, image: $profileImage)
+    /// ```
+    ///
+    /// Square Crop Example:
+    /// ```swift
+    /// .profilePhotoPicker(
+    ///     isPresented: $showPicker,
+    ///     image: $profileImage,
+    ///     cropShape: .square
+    /// )
+    /// ```
+    ///
+    /// Custom Aspect Ratio Example:
+    /// ```swift
+    /// .profilePhotoPicker(
+    ///     isPresented: $showPicker,
+    ///     image: $profileImage,
+    ///     cropShape: .square,
+    ///     aspectRatio: CGSize(width: 16, height: 9)
+    /// )
     /// ```
     ///
     /// Complete Example:
@@ -53,13 +82,24 @@ public extension View {
     ///             }
     ///             .buttonStyle(.borderedProminent)
     ///         }
-    ///         .profilePhotoPicker(isPresented: $showPicker, image: $profileImage)
+    ///         .cropImagePicker(isPresented: $showPicker, image: $profileImage)
     ///     }
     /// }
     /// ```
-    func profilePhotoPicker(isPresented: Binding<Bool>, image: Binding<UIImage?>) -> some View {
+    func cropImagePicker(
+        isPresented: Binding<Bool>,
+        image: Binding<UIImage?>,
+        cropShape: CropShape = .circle,
+        aspectRatio: CGSize = CGSize(width: 1, height: 1),
+        aspectRatioLocked: Bool = true
+    ) -> some View {
         sheet(isPresented: isPresented) {
-            ProfilePhotoPicker(image: image)
+            CropImagePicker(
+                image: image,
+                cropShape: cropShape,
+                aspectRatio: aspectRatio,
+                aspectRatioLocked: aspectRatioLocked
+            )
         }
     }
 }

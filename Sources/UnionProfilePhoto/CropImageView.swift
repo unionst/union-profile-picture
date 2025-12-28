@@ -1,8 +1,18 @@
+//
+//  CropImageView.swift
+//  UnionProfilePhoto
+//
+//  Created on 12/28/24.
+//
+
 import SwiftUI
 import CropViewController
 
 struct CropImageView: UIViewControllerRepresentable {
     @Binding var image: UIImage?
+    let cropShape: CropShape
+    let aspectRatio: CGSize
+    let aspectRatioLocked: Bool
     var dismiss: () -> Void
 
     func makeCoordinator() -> Coordinator {
@@ -15,11 +25,11 @@ struct CropImageView: UIViewControllerRepresentable {
         }
         
         let cropController = CropViewController(
-            croppingStyle: .circular,
+            croppingStyle: cropShape.croppingStyle,
             image: image
         )
-        cropController.customAspectRatio = CGSize(width: 1, height: 1)
-        cropController.aspectRatioLockEnabled = true
+        cropController.customAspectRatio = aspectRatio
+        cropController.aspectRatioLockEnabled = aspectRatioLocked
         cropController.aspectRatioPickerButtonHidden = true
         cropController.cancelButtonColor = .white
         cropController.resetButtonHidden = true

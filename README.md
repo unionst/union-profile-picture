@@ -1,21 +1,23 @@
 # UnionProfilePhoto
 
-The easiest way to do profile photo upload and cropping in SwiftUI.
+The easiest way to crop images in SwiftUI.
 
 One line. That's it.
 
 ```swift
-.profilePhotoPicker(isPresented: $showPicker, image: $profileImage)
+.cropImagePicker(isPresented: $showPicker, image: $image)
 ```
 
 ## Features
 
 - 📸 **Photo Library Picker** - Native PHPicker integration
-- ✂️ **Circular Cropping** - Drag, pinch, and zoom gestures
+- ✂️ **Flexible Cropping** - Circle or square crop shapes
+- 📐 **Custom Aspect Ratios** - 1:1, 16:9, 4:3, or any custom ratio
+- 🔓 **Locked or Free Crop** - Lock aspect ratio or allow free-form
 - 🎨 **Beautiful UI** - Native iOS design with smooth animations
 - 🔄 **Auto Flow** - Pick → Crop → Done automatically
 - ⚡️ **Modern APIs** - Async/await, iOS 17+
-- 🎯 **Zero Config** - Works perfectly out of the box
+- 🎯 **Zero Config** - Works perfectly with sensible defaults
 
 ## Installation
 
@@ -36,7 +38,7 @@ Or in Xcode:
 
 ## Usage
 
-### Basic Example
+### Basic Example (Circular Crop)
 
 ```swift
 import SwiftUI
@@ -50,9 +52,41 @@ struct ContentView: View {
         Button("Select Photo") {
             showPicker = true
         }
-        .profilePhotoPicker(isPresented: $showPicker, image: $profileImage)
+        .cropImagePicker(isPresented: $showPicker, image: $profileImage)
     }
 }
+```
+
+### Square Crop
+
+```swift
+.profilePhotoPicker(
+    isPresented: $showPicker,
+    image: $profileImage,
+    cropShape: .square
+)
+```
+
+### Custom Aspect Ratio (16:9 Landscape)
+
+```swift
+.profilePhotoPicker(
+    isPresented: $showPicker,
+    image: $profileImage,
+    cropShape: .square,
+    aspectRatio: CGSize(width: 16, height: 9)
+)
+```
+
+### Unlocked Aspect Ratio (Free Crop)
+
+```swift
+.profilePhotoPicker(
+    isPresented: $showPicker,
+    image: $profileImage,
+    cropShape: .square,
+    aspectRatioLocked: false
+)
 ```
 
 ### Complete Example
@@ -89,7 +123,7 @@ struct ProfileView: View {
             }
             .buttonStyle(.borderedProminent)
         }
-        .profilePhotoPicker(isPresented: $showPicker, image: $profileImage)
+        .cropImagePicker(isPresented: $showPicker, image: $profileImage)
     }
 }
 ```
